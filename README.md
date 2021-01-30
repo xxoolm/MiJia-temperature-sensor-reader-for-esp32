@@ -1,4 +1,4 @@
-# 运行在esp32上的米家蓝牙温湿度计2(LYWSD03MMC)度数读取器
+# 运行在esp32上的米家蓝牙温湿度计2(LYWSD03MMC)温度湿度电池电量读取器
 # A simple MiJia temperature and humidity sensor reader for esp32. Model ID:LYWSD03MMC
 
 > **修改并简化自 https://github.com/jaggil/ESP32_Xiaomi-Mijia-LYWSD03MMC** ，感谢作者提供的uuid和esp32 ble使用方法。
@@ -8,9 +8,10 @@
 - 功能包括
     1. 按照指定间隔时间读取温湿度计读数
     2. 通过访问url的方式上传至后端
+    3. NEW! 在main(multi sensor).cpp 版本中 可以实现对多个传感器数据进行读取
 
 - 需要进行的配置
-    1. wifi账号与密码
+    1. wifi的ssid与密码
     2. 温湿度计mac地址
     3. (可选) 读取的时间间隔
     4. (高玩) 直接重写sendToBackend函数达到自己所需的效果
