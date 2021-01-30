@@ -9,6 +9,7 @@ void sendToBackend(double temp, double humi, double batt, BLERemoteCharacteristi
 void notifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic_THB, uint8_t *pData, size_t length, bool isNotify);
 double dewPointC(double celsius, double humidity);
 void disconnectSensor(BLERemoteCharacteristic *bleChara);
+std::string replaceStr(std::string srcStr, std::string oldStr, std::string newStr);
 
 // 无线网路SSID,密码配置
 // your wifi configuration
@@ -192,7 +193,9 @@ void sendToBackend(double temp, double humi, double batt, BLERemoteCharacteristi
 	{
 		Serial.println("connecting to backend...");
 		char url[150];
-		sprintf(url, "http://192.168.50.188:8672/api/upload?temp=%f&humi=%f&batt=%f&address=%s", temp, humi, batt, pClient->getPeerAddress().toString().c_str());
+		std::string mac = replaceStr(pClient->getPeerAddress().toString(),":","-");
+		sprintf(url, "http://192.168.50.188:8672/api/upload?temp=%.2f&humi=%.2f&batt=%.2f&address=%s", temp, humi, batt, mac.c_str());
+		Serial.println(url);
 		httpClient->begin(url);
 		httpClient->setTimeout(5000);
 		int statusCode = httpClient->GET();
@@ -240,4 +243,14 @@ double dewPointC(double celsius, double humidity)
 											 // (2) DEWPOINT = F(Vapor Pressure)
 	double T = log(VP / 0.61078);			 // temp var
 	return (241.88 * T) / (17.558 - T);
+}
+
+std::string replaceStr(std::string srcStr, std::string oldStr, std::string newStr)
+{
+    std::string::size_type pos = 0;
+    while((pos = srcStr.find(oldStr)) != std::string::npos)   //替换所有指定子串
+    {
+        srcStr.replace(pos, oldStr.length(), newStr);
+    }
+    return srcStr;
 }
